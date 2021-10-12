@@ -1,7 +1,13 @@
+import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.servlet.ServletContextHandler;
+import org.eclipse.jetty.servlet.ServletHolder;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import ru.akirakozov.sd.refactoring.servlet.AddProductServlet;
+import ru.akirakozov.sd.refactoring.servlet.GetProductsServlet;
+import ru.akirakozov.sd.refactoring.servlet.QueryServlet;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -13,11 +19,14 @@ import java.util.*;
 import static ru.akirakozov.sd.refactoring.DB.DBUtils.executeUpdate;
 import static ru.akirakozov.sd.refactoring.html.HTMLUtils.*;
 
+
 public class TestServlets {
 //    Run test with already running server!
 
+    Server server;
+
     @Before
-    public void setUp() {
+    public void setUp() throws Exception {
         executeUpdate("""
                 CREATE TABLE IF NOT EXISTS PRODUCT(
                  ID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
@@ -25,13 +34,25 @@ public class TestServlets {
                  PRICE INT NOT NULL
                 )
                  """);
+
+        server = new Server(8081);
+
+        ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
+        context.setContextPath("/");
+        server.setHandler(context);
+
+        context.addServlet(new ServletHolder(new AddProductServlet()), "/add-product");
+        context.addServlet(new ServletHolder(new GetProductsServlet()), "/get-products");
+        context.addServlet(new ServletHolder(new QueryServlet()), "/query");
+
+        server.start();
     }
 
     @After
-    public void closeAndClearAll() {
+    public void closeAndClearAll() throws Exception {
         executeUpdate("DROP TABLE PRODUCT");
+        server.stop();
     }
-
 
     @Test
     public void testServlets() throws IOException {
@@ -126,7 +147,7 @@ public class TestServlets {
         );
     }
 
-        private String addProduct(String name, Object price) throws IOException {
+    private String addProduct(String name, Object price) throws IOException {
         return sendRequestAndGetResponse("add-product", Map.of("name", name, "price", price.toString()));
     }
 

@@ -9,6 +9,8 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
+import static ru.akirakozov.sd.refactoring.DB.DBUtils.writeResponseAndCloseAll;
+
 /**
  * @author akirakozov
  */
@@ -25,7 +27,7 @@ public class QueryServlet extends HttpServlet {
                     response.getWriter().println("<html><body>");
                     response.getWriter().println("<h1>Product with max price: </h1>");
 
-                    GetProductsServlet.kek(response, stmt, rs);
+                    writeResponseAndCloseAll(response, stmt, rs);
                 }
 
             } catch (Exception e) {
@@ -39,7 +41,7 @@ public class QueryServlet extends HttpServlet {
                     response.getWriter().println("<html><body>");
                     response.getWriter().println("<h1>Product with min price: </h1>");
 
-                    GetProductsServlet.kek(response, stmt, rs);
+                    writeResponseAndCloseAll(response, stmt, rs);
                 }
 
             } catch (Exception e) {
