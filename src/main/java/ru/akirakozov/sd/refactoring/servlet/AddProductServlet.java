@@ -1,11 +1,11 @@
 package ru.akirakozov.sd.refactoring.servlet;
 
-import ru.akirakozov.sd.refactoring.DB.DBUtils;
-
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+
+import static ru.akirakozov.sd.refactoring.DB.DBUtils.executeUpdate;
 
 /**
  * @author akirakozov
@@ -17,7 +17,7 @@ public class AddProductServlet extends HttpServlet {
         String name = request.getParameter("name");
         long price = Long.parseLong(request.getParameter("price"));
 
-        DBUtils.executeUpdate("""
+        executeUpdate("""
                 INSERT INTO PRODUCT
                 (NAME, PRICE) VALUES ("%s", "%s")
                 """.formatted(name, price));
