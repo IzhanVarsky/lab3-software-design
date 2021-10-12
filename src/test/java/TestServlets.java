@@ -11,6 +11,7 @@ import java.net.URLConnection;
 import java.util.*;
 
 import static ru.akirakozov.sd.refactoring.DB.DBUtils.executeUpdate;
+import static ru.akirakozov.sd.refactoring.html.HTMLUtils.*;
 
 public class TestServlets {
 //    Run test with already running server!
@@ -125,25 +126,7 @@ public class TestServlets {
         );
     }
 
-    private String wrapWithTag(String tag, String content) {
-        return "<%s>%s</%s>".formatted(tag, content, tag);
-    }
-
-    private String h1Wrap(String content) {
-        return wrapWithTag("h1", content);
-    }
-
-    private String pairToHTMLString(String a, Object b) {
-        return a + "\t" + b + "</br>";
-    }
-
-    private String constructHTMLResponse(Object... objects) {
-        StringBuilder sj = new StringBuilder();
-        Arrays.stream(objects).forEach(sj::append);
-        return wrapWithTag("html", wrapWithTag("body", sj.toString()));
-    }
-
-    private String addProduct(String name, Object price) throws IOException {
+        private String addProduct(String name, Object price) throws IOException {
         return sendRequestAndGetResponse("add-product", Map.of("name", name, "price", price.toString()));
     }
 
