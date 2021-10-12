@@ -54,8 +54,6 @@ public class TestServlets {
 
     @Test
     public void testServlets() throws IOException {
-        Assert.assertEquals(constructHTMLResponse(), getProducts());
-
         Assert.assertEquals("OK", addProduct("x1", 1000));
         Assert.assertEquals("OK", addProduct("x2", 10000));
         Assert.assertEquals("OK", addProduct("x1", -100));
@@ -92,6 +90,36 @@ public class TestServlets {
 
         Assert.assertEquals(
                 constructHTMLResponse("Number of products: 3"),
+                getByQuery("count")
+        );
+    }
+
+    @Test
+    public void actionsOnEmptyDB() throws IOException {
+        Assert.assertEquals(constructHTMLResponse(), getProducts());
+
+        Assert.assertEquals(
+                constructHTMLResponse(
+                        h1Wrap("Product with max price: ")
+                ),
+                getByQuery("max")
+        );
+        Assert.assertEquals(
+                constructHTMLResponse(
+                        h1Wrap("Product with min price: ")
+                ),
+                getByQuery("min")
+        );
+
+        Assert.assertEquals(
+                constructHTMLResponse(
+                        "Summary price: 0"
+                ),
+                getByQuery("sum")
+        );
+
+        Assert.assertEquals(
+                constructHTMLResponse("Number of products: 0"),
                 getByQuery("count")
         );
     }
