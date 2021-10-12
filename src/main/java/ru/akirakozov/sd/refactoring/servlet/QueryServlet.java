@@ -9,6 +9,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import static ru.akirakozov.sd.refactoring.DB.DBUtils.executeQuery;
+import static ru.akirakozov.sd.refactoring.servlet.ResponseUtils.setContentTypeAndOKStatus;
 
 /**
  * @author akirakozov
@@ -54,8 +55,7 @@ public class QueryServlet extends HttpServlet {
             default -> response.getWriter().println("Unknown command: " + command);
         }
 
-        response.setContentType("text/html");
-        response.setStatus(HttpServletResponse.SC_OK);
+        setContentTypeAndOKStatus(response);
     }
 
 }

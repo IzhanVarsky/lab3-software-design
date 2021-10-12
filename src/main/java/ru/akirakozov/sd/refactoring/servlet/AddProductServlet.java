@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 import static ru.akirakozov.sd.refactoring.DB.DBUtils.executeUpdate;
+import static ru.akirakozov.sd.refactoring.servlet.ResponseUtils.setContentTypeAndOKStatus;
 
 /**
  * @author akirakozov
@@ -22,8 +23,7 @@ public class AddProductServlet extends HttpServlet {
                 (NAME, PRICE) VALUES ("%s", "%s")
                 """.formatted(name, price));
 
-        response.setContentType("text/html");
-        response.setStatus(HttpServletResponse.SC_OK);
+        setContentTypeAndOKStatus(response);
         response.getWriter().println("OK");
     }
 }
