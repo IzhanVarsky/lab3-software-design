@@ -19,10 +19,13 @@ public class TestServlets {
 
     @Before
     public void setUp() {
-        runSQL("CREATE TABLE IF NOT EXISTS PRODUCT" +
-               "(ID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL," +
-               " NAME           TEXT    NOT NULL, " +
-               " PRICE          INT     NOT NULL)");
+        runSQL("""
+                CREATE TABLE IF NOT EXISTS PRODUCT(
+                 ID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                 NAME TEXT NOT NULL,
+                 PRICE INT NOT NULL
+                )
+                 """);
     }
 
     @After
