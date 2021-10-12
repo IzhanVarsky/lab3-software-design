@@ -129,10 +129,10 @@ public class TestServlets {
         int productCNT = 300;
         Random random = new Random();
 
-        List<Integer> prices = new ArrayList<>(productCNT);
+        List<Long> prices = new ArrayList<>(productCNT);
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < productCNT; i++) {
-            final int price = random.nextInt();
+            final long price = random.nextLong();
             prices.add(price);
             Assert.assertEquals("OK", addProduct("x" + i, price));
             sb.append(pairToHTMLString("x" + i, price));
@@ -142,7 +142,7 @@ public class TestServlets {
                 getProducts()
         );
 
-        final int maximum = Collections.max(prices);
+        final long maximum = Collections.max(prices);
         Assert.assertEquals(
                 constructHTMLResponse(
                         h1Wrap("Product with max price: "),
@@ -151,7 +151,7 @@ public class TestServlets {
                 getByQuery("max")
         );
 
-        final int minimum = Collections.min(prices);
+        final long minimum = Collections.min(prices);
         Assert.assertEquals(
                 constructHTMLResponse(
                         h1Wrap("Product with min price: "),
@@ -162,7 +162,7 @@ public class TestServlets {
 
         Assert.assertEquals(
                 constructHTMLResponse(
-                        "Summary price: ", prices.stream().mapToInt(i -> i).sum()
+                        "Summary price: ", prices.stream().mapToLong(i -> i).sum()
                 ),
                 getByQuery("sum")
         );
