@@ -8,18 +8,16 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.*;
+
+import static ru.akirakozov.sd.refactoring.DB.DBUtils.executeUpdate;
 
 public class TestServlets {
 //    Run test with already running server!
 
     @Before
     public void setUp() {
-        runSQL("""
+        executeUpdate("""
                 CREATE TABLE IF NOT EXISTS PRODUCT(
                  ID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
                  NAME TEXT NOT NULL,
@@ -30,19 +28,9 @@ public class TestServlets {
 
     @After
     public void closeAndClearAll() {
-        runSQL("DROP TABLE PRODUCT");
+        executeUpdate("DROP TABLE PRODUCT");
     }
 
-    private void runSQL(String sql) {
-        try (Connection c = DriverManager.getConnection("jdbc:sqlite:test.db")) {
-            Statement stmt = c.createStatement();
-
-            stmt.executeUpdate(sql);
-            stmt.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
 
     @Test
     public void testServlets() throws IOException {
