@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.StringJoiner;
 
-public class AddAndGetTest {
+public class TestServlets {
 //    Run test with already running server!
 
     @Before
@@ -50,7 +50,7 @@ public class AddAndGetTest {
     }
 
     @Test
-    public void testAddAndGetProduct() throws IOException {
+    public void testServlets() throws IOException {
         Assert.assertEquals(constructHTMLResponse(List.of()), getProducts());
 
         Assert.assertEquals("OK",
@@ -72,6 +72,40 @@ public class AddAndGetTest {
                 ),
                 getProducts()
         );
+
+        Assert.assertEquals(
+                constructHTMLResponse(
+                        List.of(h1Wrap("Product with max price: "), pairToHTMLString("x2", "10000"))
+                ),
+                getByQuery(Map.of("command", "max"))
+        );
+
+        Assert.assertEquals(
+                constructHTMLResponse(
+                        List.of(h1Wrap("Product with min price: "), pairToHTMLString("x1", "-100"))
+                ),
+                getByQuery(Map.of("command", "min"))
+        );
+
+        Assert.assertEquals(
+                constructHTMLResponse(
+                        List.of("Summary price: ", String.valueOf(1000 + 10000 + (-100)))
+                ),
+                getByQuery(Map.of("command", "sum"))
+        );
+
+        Assert.assertEquals(
+                constructHTMLResponse(List.of("Number of products: 3")),
+                getByQuery(Map.of("command", "count"))
+        );
+    }
+
+    private String wrapWithTag(String tag, String content) {
+        return "<%s>%s</%s>".formatted(tag, content, tag);
+    }
+
+    private String h1Wrap(String content) {
+        return wrapWithTag("h1", content);
     }
 
     private String pairToHTMLString(String a, String b) {
@@ -81,7 +115,7 @@ public class AddAndGetTest {
     private String constructHTMLResponse(List<String> pairs) {
         StringBuilder sj = new StringBuilder();
         pairs.forEach(sj::append);
-        return "<html><body>%s</body></html>".formatted(sj);
+        return wrapWithTag("html", wrapWithTag("body", sj.toString()));
     }
 
     private String addProduct(Map<String, String> args) throws IOException {
