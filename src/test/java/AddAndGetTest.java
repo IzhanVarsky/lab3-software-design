@@ -64,19 +64,17 @@ public class AddAndGetTest {
 
     @Test
     public void testAddAndGetProduct() throws IOException {
-        String allProducts = sendRequestAndGetResponse(getProductsURL());
-        Assert.assertEquals(constructHTMLResponse(List.of()), allProducts);
+        Assert.assertEquals(constructHTMLResponse(List.of()), getProducts());
 
-        String url1 = addProductURL(Map.of("name", "x1", "price", "1000"));
-        Assert.assertEquals("OK", sendRequestAndGetResponse(url1));
+        Assert.assertEquals("OK",
+                addProduct(Map.of("name", "x1", "price", "1000")));
 
-        String url2 = addProductURL(Map.of("name", "x2", "price", "10000"));
-        Assert.assertEquals("OK", sendRequestAndGetResponse(url2));
+        Assert.assertEquals("OK",
+                addProduct(Map.of("name", "x2", "price", "10000")));
 
-        String url3 = addProductURL(Map.of("name", "x1", "price", "-100"));
-        Assert.assertEquals("OK", sendRequestAndGetResponse(url3));
+        Assert.assertEquals("OK",
+                addProduct(Map.of("name", "x1", "price", "-100")));
 
-        allProducts = sendRequestAndGetResponse(getProductsURL());
         Assert.assertEquals(
                 constructHTMLResponse(
                         List.of(
@@ -85,7 +83,7 @@ public class AddAndGetTest {
                                 Pair.of("x1", "-100")
                         )
                 ),
-                allProducts
+                getProducts()
         );
     }
 
@@ -95,26 +93,26 @@ public class AddAndGetTest {
         return "<html><body>%s</body></html>".formatted(sj);
     }
 
-    private String addProductURL(Map<String, String> args) {
-        return getURLImpl("add-product", args);
+    private String addProduct(Map<String, String> args) throws IOException {
+        return sendRequestAndGetResponse("add-product", args);
     }
 
-    private String getProductsURL() {
-        return getURLImpl("get-products", Map.of());
+    private String getProducts() throws IOException {
+        return sendRequestAndGetResponse("get-products", Map.of());
     }
 
-    private String getQueryURL(Map<String, String> args) {
-        return getURLImpl("query", args);
+    private String getByQuery(Map<String, String> args) throws IOException {
+        return sendRequestAndGetResponse("query", args);
     }
 
-    private String getURLImpl(String method, Map<String, String> args) {
+    private String makeURL(String method, Map<String, String> args) {
         StringJoiner sj = new StringJoiner("&");
         args.forEach((k, v) -> sj.add(k + "=" + v));
         return "http://localhost:8081/" + method + "?" + sj;
     }
 
-    private String sendRequestAndGetResponse(String urlString) throws IOException {
-        URL url = new URL(urlString);
+    private String sendRequestAndGetResponse(String method, Map<String, String> args) throws IOException {
+        URL url = new URL(makeURL(method, args));
         URLConnection conn = url.openConnection();
         StringBuilder result = new StringBuilder();
         try (BufferedReader reader = new BufferedReader(
