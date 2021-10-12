@@ -21,8 +21,6 @@ import static ru.akirakozov.sd.refactoring.html.HTMLUtils.*;
 
 
 public class TestServlets {
-//    Run test with already running server!
-
     Server server;
 
     @Before
