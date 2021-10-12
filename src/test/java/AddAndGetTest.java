@@ -12,26 +12,13 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.StringJoiner;
 
 public class AddAndGetTest {
 //    Run test with already running server!
-
-    static class Pair {
-        String a;
-        String b;
-
-        private Pair(String a, String b) {
-            this.a = a;
-            this.b = b;
-        }
-
-        static Pair of(String a, String b) {
-            return new Pair(a, b);
-        }
-    }
 
     @Before
     public void setUp() {
@@ -78,18 +65,22 @@ public class AddAndGetTest {
         Assert.assertEquals(
                 constructHTMLResponse(
                         List.of(
-                                Pair.of("x1", "1000"),
-                                Pair.of("x2", "10000"),
-                                Pair.of("x1", "-100")
+                                pairToHTMLString("x1", "1000"),
+                                pairToHTMLString("x2", "10000"),
+                                pairToHTMLString("x1", "-100")
                         )
                 ),
                 getProducts()
         );
     }
 
-    private String constructHTMLResponse(List<Pair> pairs) {
+    private String pairToHTMLString(String a, String b) {
+        return a + "\t" + b + "</br>";
+    }
+
+    private String constructHTMLResponse(List<String> pairs) {
         StringBuilder sj = new StringBuilder();
-        pairs.forEach(p -> sj.append(p.a).append("\t").append(p.b).append("</br>"));
+        pairs.forEach(sj::append);
         return "<html><body>%s</body></html>".formatted(sj);
     }
 
@@ -98,7 +89,7 @@ public class AddAndGetTest {
     }
 
     private String getProducts() throws IOException {
-        return sendRequestAndGetResponse("get-products", Map.of());
+        return sendRequestAndGetResponse("get-products", Collections.emptyMap());
     }
 
     private String getByQuery(Map<String, String> args) throws IOException {
