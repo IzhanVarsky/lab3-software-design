@@ -8,7 +8,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import static ru.akirakozov.sd.refactoring.DB.DBUtils.executeQuery;
-import static ru.akirakozov.sd.refactoring.html.HTMLUtils.wrapWithTag;
+import static ru.akirakozov.sd.refactoring.html.HTMLUtils.h1Wrap;
 import static ru.akirakozov.sd.refactoring.servlet.ResponseUtils.setContentTypeAndOKStatus;
 
 /**
@@ -22,11 +22,11 @@ public class QueryServlet extends HttpServlet {
         switch (command) {
             case "max" -> executeQuery(response,
                     "SELECT * FROM PRODUCT ORDER BY PRICE DESC LIMIT 1",
-                    wrapWithTag("h1", "Product with max price: ")
+                    h1Wrap("Product with max price: ")
             );
             case "min" -> executeQuery(response,
                     "SELECT * FROM PRODUCT ORDER BY PRICE LIMIT 1",
-                    wrapWithTag("h1", "Product with min price: ")
+                    h1Wrap("Product with min price: ")
             );
             case "sum" -> executeQuery(response,
                     "SELECT SUM(price) FROM PRODUCT",
