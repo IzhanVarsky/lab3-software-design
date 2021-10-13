@@ -5,6 +5,7 @@ import java.io.PrintWriter;
 import java.sql.*;
 import java.util.function.Function;
 
+import static ru.akirakozov.sd.refactoring.html.HTMLUtils.constructHTMLResponse;
 import static ru.akirakozov.sd.refactoring.html.HTMLUtils.pairToHTMLString;
 
 public class DBUtils {
@@ -33,23 +34,23 @@ public class DBUtils {
             Statement stmt = c.createStatement();
 
             ResultSet rs = stmt.executeQuery(sql);
-            final PrintWriter writer = response.getWriter();
 
-            writer.println("<html><body>");
+            StringBuilder responseBuilder = new StringBuilder();
+
             if (prependContent != null) {
-                writer.println(prependContent);
+                responseBuilder.append(prependContent);
             }
             if (fun != null) {
-                writer.println(fun.apply(rs).toString());
+                responseBuilder.append(fun.apply(rs));
             }
 
             while (rs.next()) {
                 String name = rs.getString("name");
                 int price = rs.getInt("price");
-                writer.println(pairToHTMLString(name, price));
+                responseBuilder.append(pairToHTMLString(name, price));
             }
-            writer.println("</body></html>");
 
+            response.getWriter().print(constructHTMLResponse(responseBuilder));
             rs.close();
             stmt.close();
         } catch (Exception e) {

@@ -22,10 +22,12 @@ public class QueryServlet extends HttpServlet {
         switch (command) {
             case "max" -> executeQuery(response,
                     "SELECT * FROM PRODUCT ORDER BY PRICE DESC LIMIT 1",
-                    wrapWithTag("h1", "Product with max price: "));
+                    wrapWithTag("h1", "Product with max price: ")
+            );
             case "min" -> executeQuery(response,
                     "SELECT * FROM PRODUCT ORDER BY PRICE LIMIT 1",
-                    wrapWithTag("h1", "Product with min price: "));
+                    wrapWithTag("h1", "Product with min price: ")
+            );
             case "sum" -> executeQuery(response,
                     "SELECT SUM(price) FROM PRODUCT",
                     "Summary price: ",
