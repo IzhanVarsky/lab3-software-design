@@ -3,7 +3,7 @@ package ru.akirakozov.sd.refactoring.DB;
 import javax.servlet.http.HttpServletResponse;
 import java.io.PrintWriter;
 import java.sql.*;
-import java.util.function.BiConsumer;
+import java.util.function.Function;
 
 import static ru.akirakozov.sd.refactoring.html.HTMLUtils.pairToHTMLString;
 
@@ -28,7 +28,7 @@ public class DBUtils {
         executeQuery(response, sql, prependContent, null);
     }
 
-    public static void executeQuery(HttpServletResponse response, String sql, String prependContent, BiConsumer<ResultSet, PrintWriter> fun) {
+    public static void executeQuery(HttpServletResponse response, String sql, String prependContent, Function<ResultSet, Object> fun) {
         try (Connection c = getConnection()) {
             Statement stmt = c.createStatement();
 
@@ -40,7 +40,7 @@ public class DBUtils {
                 writer.println(prependContent);
             }
             if (fun != null) {
-                fun.accept(rs, writer);
+                writer.println(fun.apply(rs).toString());
             }
 
             while (rs.next()) {
